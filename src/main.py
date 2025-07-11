@@ -1,5 +1,37 @@
 # app.py
+
+import os
+import subprocess
 import streamlit as st
+
+# Set base directory path (to src/)
+base_dir = os.path.dirname(__file__)
+
+# List of expected .pkl files
+required_files = [
+    os.path.join(base_dir, 'df_cleaned.pkl'),
+    os.path.join(base_dir, 'tfidf_matrix.pkl'),
+    os.path.join(base_dir, 'cosine_sim.pkl')
+]
+
+# Check for missing files and run preprocessing if needed
+missing_files = [f for f in required_files if not os.path.exists(f)]
+
+if missing_files:
+    st.warning("🔄 Required files not found. Running preprocessing...")
+    try:
+        result = subprocess.run(
+            ["python", os.path.join(base_dir, "preprocess.py")],
+            check=True,
+            capture_output=True,
+            text=True
+        )
+        st.success("✅ Preprocessing completed successfully.")
+    except subprocess.CalledProcessError as e:
+        st.error("❌ Preprocessing failed.")
+        st.text(e.output)
+        raise
+
 from recommend import df, recommend_songs
 
 # Set custom Streamlit page config
