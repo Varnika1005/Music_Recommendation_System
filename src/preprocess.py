@@ -29,7 +29,7 @@ nltk.download('stopwords')
 # Load and sample dataset
 try:
     base_dir = os.path.dirname(__file__)
-    csv_path = os.path.join(base_dir, 'spotify_sample.csv')
+    csv_path = os.path.join(base_dir, 'spotify_millsongdata.csv')
 
     df = pd.read_csv(csv_path).sample(10000)
 
