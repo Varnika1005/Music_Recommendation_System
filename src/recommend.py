@@ -1,6 +1,4 @@
 # recommend.py
-
-import os
 import joblib
 import logging
 
@@ -14,13 +12,10 @@ logging.basicConfig(
     ]
 )
 
-# Use correct base directory
-base_dir = os.path.dirname(__file__)
-
 logging.info("🔁 Loading data...")
 try:
-    df = joblib.load(os.path.join(base_dir, 'df_cleaned.pkl'))
-    cosine_sim = joblib.load(os.path.join(base_dir, 'cosine_sim.pkl'))
+    df = joblib.load('df_cleaned.pkl')
+    cosine_sim = joblib.load('cosine_sim.pkl')
     logging.info("✅ Data loaded successfully.")
 except Exception as e:
     logging.error("❌ Failed to load required files: %s", str(e))
@@ -38,9 +33,9 @@ def recommend_songs(song_name, top_n=5):
     sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)[1:top_n + 1]
     song_indices = [i[0] for i in sim_scores]
     logging.info("✅ Top %d recommendations ready.", top_n)
-
+    # Create DataFrame with clean serial numbers starting from 1
     result_df = df[['artist', 'song']].iloc[song_indices].reset_index(drop=True)
-    result_df.index = result_df.index + 1
+    result_df.index = result_df.index + 1  # Start from 1 instead of 0
     result_df.index.name = "S.No."
 
     return result_df
