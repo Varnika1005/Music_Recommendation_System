@@ -1,8 +1,10 @@
 # app.py
-from recommend import df, recommend_songs
 import os
+import subprocess
+import logging
 import streamlit as st
 
+# Set base path
 base_dir = os.path.dirname(__file__)
 required_files = [
     os.path.join(base_dir, 'df_cleaned.pkl'),
@@ -10,12 +12,10 @@ required_files = [
     os.path.join(base_dir, 'cosine_sim.pkl')
 ]
 
+# Run preprocess.py if any .pkl file is missing
 missing_files = [f for f in required_files if not os.path.exists(f)]
 
 if missing_files:
-    import subprocess
-    import logging
-
     logging.warning(f"Missing files: {missing_files}. Running preprocess.py...")
     try:
         subprocess.run(["python", os.path.join(base_dir, "preprocess.py")], check=True)
@@ -23,6 +23,7 @@ if missing_files:
         logging.error(f"Failed to run preprocess.py: {str(e)}")
         st.error("Preprocessing failed. Check logs.")
 
+from recommend import df, recommend_songs
 
 
 # Set custom Streamlit page config
