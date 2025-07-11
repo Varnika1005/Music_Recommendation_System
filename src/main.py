@@ -29,7 +29,7 @@ if missing_files:
         st.success("✅ Preprocessing completed successfully.")
     except subprocess.CalledProcessError as e:
         st.error("❌ Preprocessing failed.")
-        st.text(e.output)
+        st.error(e.stderr or e.stdout or str(e))
         raise
 
 from recommend import df, recommend_songs
