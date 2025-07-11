@@ -18,6 +18,7 @@ if missing_files:
         logging.error(f"Failed to run preprocess.py: {str(e)}")
         st.error("Preprocessing failed. Check logs.")
 
+
 # Set custom Streamlit page config
 st.set_page_config(
     page_title="Lyrics-Based Music Recommender",
