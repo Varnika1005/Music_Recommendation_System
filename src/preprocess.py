@@ -1,4 +1,4 @@
-# preprocess.py
+import os
 import pandas as pd
 import re
 import nltk
@@ -24,18 +24,20 @@ logging.info("🚀 Starting preprocessing...")
 nltk.download('punkt')
 nltk.download('stopwords')
 
+# Compute path to dataset
+base_dir = os.path.dirname(__file__)  # path to /src
+csv_path = os.path.join(base_dir, "../spotify_millsongdata.csv")
+
 # Load and sample dataset
 try:
-    df = pd.read_csv("spotify_millsongdata.csv").sample(10000)
+    df = pd.read_csv(csv_path).sample(10000)
     logging.info("✅ Dataset loaded and sampled: %d rows", len(df))
 except Exception as e:
     logging.error("❌ Failed to load dataset: %s", str(e))
     raise e
 
-# Drop link column and preprocess
+# Preprocessing
 df = df.drop(columns=['link'], errors='ignore').reset_index(drop=True)
-
-# Text cleaning
 stop_words = set(stopwords.words('english'))
 
 def preprocess_text(text):
@@ -47,23 +49,19 @@ def preprocess_text(text):
 
 logging.info("🧹 Cleaning text...")
 df['cleaned_text'] = df['text'].apply(preprocess_text)
-logging.info("✅ Text cleaned.")
 
-# Vectorization
-logging.info("🔠 Vectorizing using TF-IDF...")
+# TF-IDF
+logging.info("🔠 Vectorizing...")
 tfidf = TfidfVectorizer(max_features=5000)
 tfidf_matrix = tfidf.fit_transform(df['cleaned_text'])
-logging.info("✅ TF-IDF matrix shape: %s", tfidf_matrix.shape)
 
 # Cosine similarity
 logging.info("📐 Calculating cosine similarity...")
 cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
-logging.info("✅ Cosine similarity matrix generated.")
 
-# Save everything
-joblib.dump(df, 'df_cleaned.pkl')
-joblib.dump(tfidf_matrix, 'tfidf_matrix.pkl')
-joblib.dump(cosine_sim, 'cosine_sim.pkl')
-logging.info("💾 Data saved to disk.")
+# Save outputs
+joblib.dump(df, os.path.join(base_dir, 'df_cleaned.pkl'))
+joblib.dump(tfidf_matrix, os.path.join(base_dir, 'tfidf_matrix.pkl'))
+joblib.dump(cosine_sim, os.path.join(base_dir, 'cosine_sim.pkl'))
 
-logging.info("✅ Preprocessing complete.")
+logging.info("✅ Preprocessing complete and files saved.")

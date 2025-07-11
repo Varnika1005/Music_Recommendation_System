@@ -1,10 +1,15 @@
 # app.py
-import streamlit as st
 from recommend import df, recommend_songs
 import os
+import streamlit as st
 
-# Automatically trigger preprocessing if required files don't exist
-required_files = ['df_cleaned.pkl', 'tfidf_matrix.pkl', 'cosine_sim.pkl']
+base_dir = os.path.dirname(__file__)
+required_files = [
+    os.path.join(base_dir, 'df_cleaned.pkl'),
+    os.path.join(base_dir, 'tfidf_matrix.pkl'),
+    os.path.join(base_dir, 'cosine_sim.pkl')
+]
+
 missing_files = [f for f in required_files if not os.path.exists(f)]
 
 if missing_files:
@@ -13,10 +18,11 @@ if missing_files:
 
     logging.warning(f"Missing files: {missing_files}. Running preprocess.py...")
     try:
-        subprocess.run(["python", "preprocess.py"], check=True)
+        subprocess.run(["python", os.path.join(base_dir, "preprocess.py")], check=True)
     except Exception as e:
         logging.error(f"Failed to run preprocess.py: {str(e)}")
         st.error("Preprocessing failed. Check logs.")
+
 
 
 # Set custom Streamlit page config
