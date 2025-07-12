@@ -1,6 +1,4 @@
 # recommend.py
-import os
-
 import joblib
 import logging
 
@@ -13,12 +11,11 @@ logging.basicConfig(
         logging.StreamHandler()
     ]
 )
-base_dir = os.path.dirname(__file__)
 
 logging.info("🔁 Loading data...")
 try:
-    df = joblib.load(os.path.join(base_dir, 'df_cleaned.pkl'))
-    cosine_sim = joblib.load(os.path.join(base_dir, 'cosine_sim.pkl'))
+    df = joblib.load('df_cleaned.pkl')
+    cosine_sim = joblib.load('cosine_sim.pkl')
     logging.info("✅ Data loaded successfully.")
 except Exception as e:
     logging.error("❌ Failed to load required files: %s", str(e))

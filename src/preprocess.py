@@ -1,6 +1,4 @@
 # preprocess.py
-import os
-
 import pandas as pd
 import re
 import nltk
@@ -28,11 +26,7 @@ nltk.download('stopwords')
 
 # Load and sample dataset
 try:
-    base_dir = os.path.dirname(__file__)
-    csv_path = os.path.join(base_dir, 'spotify_millsongdata.csv')
-
-    df = pd.read_csv(csv_path).sample(10000)
-
+    df = pd.read_csv("spotify_millsongdata.csv").sample(10000)
     logging.info("✅ Dataset loaded and sampled: %d rows", len(df))
 except Exception as e:
     logging.error("❌ Failed to load dataset: %s", str(e))
@@ -67,11 +61,9 @@ cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
 logging.info("✅ Cosine similarity matrix generated.")
 
 # Save everything
-
-joblib.dump(df, os.path.join(base_dir, 'df_cleaned.pkl'))
-joblib.dump(tfidf_matrix, os.path.join(base_dir, 'tfidf_matrix.pkl'))
-joblib.dump(cosine_sim, os.path.join(base_dir, 'cosine_sim.pkl'))
-
+joblib.dump(df, 'df_cleaned.pkl')
+joblib.dump(tfidf_matrix, 'tfidf_matrix.pkl')
+joblib.dump(cosine_sim, 'cosine_sim.pkl')
 logging.info("💾 Data saved to disk.")
 
 logging.info("✅ Preprocessing complete.")
