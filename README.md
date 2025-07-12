@@ -20,5 +20,5 @@ A lyrics-based music recommender using TF-IDF and cosine similarity to suggest s
 
 ## 📌 Features
 
-- Recommends top similar songs based on lyrics  
+- Recommends top similar songs based on lyrics 
 - Simple, interactive UI
